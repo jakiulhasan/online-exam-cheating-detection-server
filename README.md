@@ -35,6 +35,20 @@ No service account yet? For local dev only, set `ALLOW_INSECURE_DEV_AUTH=true`. 
 server will then **decode** Firebase ID tokens without verifying their signature.
 Never do this in production.
 
+### Vercel deployment
+
+Import this repository into Vercel. Vercel automatically uses `api/index.js` as the
+serverless API entry point. Add these Production environment variables in the
+Vercel project settings:
+
+- `MONGODB_URI` (MongoDB Atlas; do not use localhost)
+- `DB_NAME`
+- `CORS_ORIGIN` (the deployed frontend URL)
+- `FB_SERVICE_ACCOUNT` (the complete Firebase service-account JSON)
+- `ALLOW_INSECURE_DEV_AUTH=false`
+
+Do not upload `.env` or configure `ALLOW_INSECURE_DEV_AUTH=true` in production.
+
 ### MongoDB
 
 Run a local `mongod`, or point `MONGODB_URI` at a MongoDB Atlas cluster. The server
