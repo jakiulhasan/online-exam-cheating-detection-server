@@ -57,6 +57,10 @@ export async function connectDB() {
   // Helpful indexes (idempotent)
   await db.collection("users").createIndex({ email: 1 }, { unique: true });
   await db.collection("rooms").createIndex({ code: 1 }, { unique: true });
+  await db
+    .collection("results")
+    .createIndex({ roomCode: 1, studentEmail: 1 }, { unique: true });
+  await db.collection("results").createIndex({ studentEmail: 1, submittedAt: -1 });
   await db.collection("violations").createIndex({ roomId: 1, ts: -1 });
 
   console.log(`✅ MongoDB connected → db "${dbName}"`);
@@ -78,5 +82,6 @@ export function getDb() {
 export const collections = {
   users: () => getDb().collection("users"),
   rooms: () => getDb().collection("rooms"),
+  results: () => getDb().collection("results"),
   violations: () => getDb().collection("violations"),
 };

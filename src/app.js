@@ -4,6 +4,7 @@ import morgan from "morgan";
 
 import usersRouter from "./routes/users.js";
 import roomsRouter from "./routes/rooms.js";
+import resultsRouter from "./routes/results.js";
 import violationsRouter from "./routes/violations.js";
 
 const app = express();
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 
 app.use("/users", usersRouter);
 app.use("/rooms", roomsRouter);
+app.use("/results", resultsRouter);
 app.use("/exams", violationsRouter);
 
 app.use((req, res) => {

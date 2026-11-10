@@ -75,14 +75,25 @@ All routes except `GET /` require a Firebase ID token:
 | POST   | `/rooms`                    | teacher | Create an exam room                                                   |
 | GET    | `/rooms`                    | token   | List rooms                                                            |
 | GET    | `/rooms/:code`              | token   | Get one room                                                          |
-| POST   | `/rooms/:code/join`         | token   | Student joins a room                                                  |
+| POST   | `/rooms/:code/join`         | student | Join a room before the five-minute post-start cutoff                   |
+| POST   | `/rooms/:code/questions`    | teacher | Save an exam's questions                                              |
+| POST   | `/rooms/:code/start`        | teacher | Start the exam                                                        |
+| POST   | `/rooms/:code/submit`       | student | Score and save a student's exam result                                |
+| GET    | `/rooms/:code/results`      | teacher | Get an exam scoreboard                                                |
+| GET    | `/results/me`               | student | Get own results and each exam scoreboard                              |
 | POST   | `/exams/:roomId/violations` | token   | Log a proctoring violation                                            |
 | GET    | `/exams/:roomId/violations` | teacher | List a room's violations                                              |
 
 `role` is fixed at first insert — users cannot escalate their own role afterwards.
 
+An in-progress exam ends at `startedAt + durationMinutes`. Room reads finalize it
+at that deadline, set the room to `completed`, and clear its active student list.
+Already-joined students may submit their timed-out answers for up to 10 seconds
+after the deadline to allow for network delay; saved results are retained.
+
 ## Collections
 
 - **users** `{ name, email, role, photoURL, profileComplete, createdAt, updatedAt }`
 - **rooms** `{ code, title, type, teacherEmail, students[], questions[], createdAt }`
+- **results** `{ roomCode, studentEmail, studentName, photoURL, score, total, submittedAt }`
 - **violations** `{ roomId, studentEmail, type, detail, ts }`
